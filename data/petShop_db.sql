@@ -186,7 +186,7 @@ CREATE TABLE `products` (
 
 LOCK TABLES `products` WRITE;
 /*!40000 ALTER TABLE `products` DISABLE KEYS */;
-INSERT INTO `products` VALUES (1,'Crocchette per cani Adulto','Cibo secco bilanciato per cani adulti',19.99,1,'https://example.com/crocchette_cani.jpg',30,'PetFoodCo'),(2,'Cibo umido per gatti con tonno','Cibo umido per gatti con carne di tonno',2.99,2,'https://example.com/cibo_umbrio_gatti.jpg',30,'CatFoodBrand'),(3,'Palla da gioco per cani','Palla da gioco resistente per cani di taglia media',8.99,3,'https://example.com/palla_cani.jpg',20,'PlayPaw'),(4,'Collare riflettente per cani','Collare riflettente per cani, ideale per passeggiate notturne',12.50,4,'https://example.com/collare_cani.jpg',40,'SafeWalk');
+INSERT INTO `products` VALUES (1,'Crocchette per cani Adulto','Cibo secco bilanciato per cani adulti',19.99,1,'crocchette_cani.jpg',30,'PetFoodCo'),(2,'Cibo umido per gatti con tonno','Cibo umido per gatti con carne di tonno',2.99,2,'cibo_umbrio_gatti.jpg',30,'CatFoodBrand'),(3,'Palla da gioco per cani','Palla da gioco resistente per cani di taglia media',8.99,3,'palla_cani.jpg',20,'PlayPaw'),(4,'Collare riflettente per cani','Collare riflettente per cani, ideale per passeggiate notturne',12.50,4,'collare_cani.jpg',40,'SafeWalk');
 /*!40000 ALTER TABLE `products` ENABLE KEYS */;
 UNLOCK TABLES;
 

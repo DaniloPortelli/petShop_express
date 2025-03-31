@@ -13,9 +13,9 @@ function index(req, res) {
 }
 
 // Funzione di ricerca che gestisce le richieste GET per cercare prodotti per nome
-function search (req, res) {
- // Estrazione del parametro  di ricerca dai parametri dell'URL
- // .term è il dato a cui ci stiamo riferendo dalla router 
+function search(req, res) {
+    // Estrazione del parametro  di ricerca dai parametri dell'URL
+    // .term è il dato a cui ci stiamo riferendo dalla router 
     const searchPar = req.params.term;
     // .trim() rimuove gli spazi bianchi all'inizio e alla fine della stringa
     if (!searchPar || searchPar.trim().length === 0) {
@@ -32,7 +32,7 @@ function search (req, res) {
     }
 
     const sql = 'SELECT * FROM products WHERE name LIKE ? LIMIT 100';
-      // %searchTerm% è un pattern di ricerca che permette di trovare tutte le parole che contengono il termine di ricerca
+    // %searchTerm% è un pattern di ricerca che permette di trovare tutte le parole che contengono il termine di ricerca
     const searchPattern = `%${searchPar}%`;
 
     connection.query(sql, [searchPattern], (err, results) => {
@@ -50,11 +50,35 @@ function search (req, res) {
                 data: []
             });
         }
-         // risposta
+        // risposta
         res.json({
             message: `Trovati ${results.length} prodotti`,
             data: results
         });
+
+
+    })
+
+    
+}
+
+function show(req, res) { 
+    const {slug} = req.params; // Destruttura slug dai parametri della richiesta
+
+    const showSql = 'SELECT * FROM products WHERE slug = ?'; // Query SQL per selezionare il prodotto con lo slug specificato
+    connection.query(showSql, [slug], (err, results) => { // Esegui la query SQL
+        if (err) {
+            console.error('Errore database:', err); // Logga l'errore se c'è un problema con il database
+            return res.status(500).json({ // Restituisci un errore 500 se c'è un problema con il server
+                error: 'Errore durante la ricerca del prodotto'
+            });
+        }
+        if (results.length === 0) { // Se non ci sono risultati
+            return res.status(404).json({ // Restituisci un errore 404
+                error: 'Prodotto non trovato'
+            });
+        }
+        res.json(results[0]); // Restituisci il primo risultato come JSON visto che sarà sempre univoco utilizzando lo slug
     })
 }
-    export  {index, search}
+export { index, search, show }

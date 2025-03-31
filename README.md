@@ -12,7 +12,7 @@ PetShop Express è un'applicazione backend sviluppata con Node.js ed Express che
 
 ## 📁 Struttura del Progetto
 
-```
+```text
 .
 ├── app.js                 # Entry point dell'applicazione
 ├── controllers/          # Controller per la logica di business
@@ -53,6 +53,7 @@ npm start
 ```
 
 Per avviare l'applicazione in modalità watch (riavvio automatico al salvataggio):
+
 ```bash
 npm run watch
 ```

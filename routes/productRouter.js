@@ -12,7 +12,7 @@ router.get('/', index);
 
 router.get('/search/:term', search);
 
-// Funzione per la visualizzazione di un prodotto specifico
+// Funzione per la visualizzazione di un prodotto specifico tramite lo slug
 router.get('/:slug', show);
 
 

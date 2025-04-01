@@ -5,12 +5,12 @@ import imagePathMiddleware from './middlewares/imagePath.js'
 //impostiamo express e la porta del server
 const app = express();
 const port = 3000;
-import productRuoter from './routes/productRouter.js'
+import productRouter from './routes/productRouter.js'
 
 app.use(cors());
 app.use(express.static("public"))
 app.use(express.json());
-app.use("/products", productRuoter)
+app.use("/products", productRouter)
 app.use(imagePathMiddleware)
 
 //attivazione del server

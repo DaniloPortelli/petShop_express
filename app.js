@@ -10,8 +10,9 @@ import productRouter from './routes/productRouter.js'
 app.use(cors());
 app.use(express.static("public"))
 app.use(express.json());
-app.use("/products", productRouter)
 app.use(imagePathMiddleware)
+app.use("/products", productRouter)
+
 
 //attivazione del server
 app.listen(port, () => {

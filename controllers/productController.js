@@ -1,14 +1,22 @@
 import connection from '../data/db.js';
 
 function index(req, res) {
-    const sql = 'SELECT * FROM products';
+    const indexSql = 'SELECT * FROM products';
 
-    connection.query(sql, (err, results) => {
-        if (err)
+    connection.query(indexSql, (err, results) => {
+        if (err) {
             return res.status(500).json({
                 error: 'Errore lato server INDEX function',
             });
-        res.json(results);
+        }
+        const products = results.map((product) => {
+            return {
+                ...product,
+                image_url: req.imagePath + product.image_url, // Aggiungi il prefisso dell'URL all'immagine
+            };
+        });
+
+        res.json(products); // Invia la risposta JSON con i prodotti modificati
     });
 }
 
@@ -174,11 +182,11 @@ function search(req, res) {
 
     })
 
-    
+
 }
 
-function show(req, res) { 
-    const {slug} = req.params; // Destruttura slug dai parametri della richiesta
+function show(req, res) {
+    const { slug } = req.params; // Destruttura slug dai parametri della richiesta
 
     const showSql = 'SELECT * FROM products WHERE slug = ?'; // Query SQL per selezionare il prodotto con lo slug specificato
     connection.query(showSql, [slug], (err, results) => { // Esegui la query SQL

@@ -165,7 +165,7 @@ function showAccessories(req, res) {
 
 function showDiscountedProducts(req, res) {
     const sql = `
-    SELECT id, name, price, discounted_price 
+    SELECT *
     FROM products
     WHERE discounted_price < price;`;
 

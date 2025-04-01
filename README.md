@@ -44,6 +44,8 @@ PetShop Express è un'applicazione backend sviluppata con Node.js ed Express che
    DB_NAME=il_tuo_database
    MAILTRAP_USER=user_mailtrap
    MAILTRAP_PASS=pass_mailtrap
+   MAILTRAP_HOST=host_mailtrap
+   MAILTRAP_PORT=port_mailtrap
    ```
 
 4. Importa lo schema del database utilizzando il file `data/petsShop_db.sql`

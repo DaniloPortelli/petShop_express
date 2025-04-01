@@ -184,6 +184,58 @@ function showDiscountedProducts(req, res) {
     });
 }
 
+/*Chiamata per prodotti per cani*/
+
+function showDogsProducts(req, res) {
+    const sql = `
+    SELECT * 
+    FROM products p
+    WHERE p.animals = 'cani';`;
+
+    connection.query(sql, (err, results) => {
+        if (err)
+            return res.status(500).json({
+                error: 'Errore lato server INDEX function',
+            });
+
+        // res.json(results);
+        const products = results.map((product) => {
+            return {
+                ...product,
+                image_url: req.imagePath + product.image_url, // Aggiungi il prefisso dell'URL all'immagine
+            };
+        });
+
+        res.json(products); // Invia la risposta JSON con i prodotti modificati
+    });
+}
+
+/*Chiamata per prodotti per gatti*/
+
+function showCatsProducts(req, res) {
+    const sql = `
+    SELECT * 
+    FROM products p
+    WHERE p.animals = 'gatti';`;
+
+    connection.query(sql, (err, results) => {
+        if (err)
+            return res.status(500).json({
+                error: 'Errore lato server INDEX function',
+            });
+
+        // res.json(results);
+        const products = results.map((product) => {
+            return {
+                ...product,
+                image_url: req.imagePath + product.image_url, // Aggiungi il prefisso dell'URL all'immagine
+            };
+        });
+
+        res.json(products); // Invia la risposta JSON con i prodotti modificati
+    });
+}
+
 
 // Funzione di ricerca che gestisce le richieste GET per cercare prodotti per nome
 function search(req, res) {
@@ -271,5 +323,5 @@ function show(req, res) {
         res.json(products[0]); // Invia la risposta JSON con i prodotti modificati
     })
 }
-export { index, showDogsFood, showDogsGames, showCatsFood, showCatsGames, showAccessories, showDiscountedProducts, search, show };
+export { index, showDogsFood, showDogsGames, showCatsFood, showCatsGames, showAccessories, showDiscountedProducts, showDogsProducts, showCatsProducts, search, show };
 

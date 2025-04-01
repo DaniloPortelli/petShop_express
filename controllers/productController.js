@@ -26,10 +26,10 @@ function index(req, res) {
 
 function showDogsFood(req, res) {
     const sql = `
-    SELECT * 
+    SELECT p.id, p.*, c.id AS category_id, c.name 
     FROM products p
     JOIN categories c ON p.category_id = c.id
-    WHERE c.name = 'Cibo' AND p.animals = 'cani'`;
+    WHERE c.name = 'Cibo' AND p.animals = 'cani';`;
 
     connection.query(sql, (err, results) => {
         if (err)
@@ -54,10 +54,11 @@ function showDogsFood(req, res) {
 
 function showDogsGames(req, res) {
     const sql = `
-    SELECT * 
+    SELECT p.id AS product_id, p.*, c.id AS category_id, c.name 
     FROM products p
     JOIN categories c ON p.category_id = c.id
-    WHERE c.name = 'Giochi' AND p.animals = 'cani'`;
+    WHERE c.name = 'Giochi' AND p.animals = 'cani';
+`;
 
     connection.query(sql, (err, results) => {
         if (err)
@@ -81,10 +82,11 @@ function showDogsGames(req, res) {
 
 function showCatsFood(req, res) {
     const sql = `
-    SELECT * 
+    SELECT p.id AS product_id, p.*, c.id AS category_id, c.name 
     FROM products p
     JOIN categories c ON p.category_id = c.id
-    WHERE c.name = 'Cibo' AND p.animals = 'gatti'`;
+    WHERE c.name = 'Cibo' AND p.animals = 'gatti';
+`;
 
     connection.query(sql, (err, results) => {
         if (err)
@@ -108,10 +110,11 @@ function showCatsFood(req, res) {
 
 function showCatsGames(req, res) {
     const sql = `
-    SELECT * 
+    SELECT p.id AS product_id, p.*, c.id AS category_id, c.name 
     FROM products p
     JOIN categories c ON p.category_id = c.id
-    WHERE c.name = 'Giochi' AND p.animals = 'gatti'`;
+    WHERE c.name = 'Giochi' AND p.animals = 'gatti';
+`;
 
     connection.query(sql, (err, results) => {
         if (err)
@@ -135,10 +138,10 @@ function showCatsGames(req, res) {
 
 function showAccessories(req, res) {
     const sql = `
-    SELECT * 
+    SELECT p.id AS product_id, p.*, c.id AS category_id, c.name
     FROM products p
     JOIN categories c ON p.category_id = c.id
-    WHERE c.name = 'Accessori'`;
+    WHERE c.name = 'Accessori';`;
 
     connection.query(sql, (err, results) => {
         if (err)
@@ -162,9 +165,9 @@ function showAccessories(req, res) {
 
 function showDiscountedProducts(req, res) {
     const sql = `
-    SELECT * 
-    FROM products 
-    WHERE discounted_price < price`;
+    SELECT id, name, price, discounted_price 
+    FROM products
+    WHERE discounted_price < price;`;
 
     connection.query(sql, (err, results) => {
         if (err)
@@ -289,8 +292,6 @@ function search(req, res) {
     });
 
 }
-
-
 
 
 function show(req, res) {

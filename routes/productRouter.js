@@ -5,7 +5,6 @@ const router = express.Router()
 
 import  { index, showDogsFood, showDogsGames, showCatsFood, showCatsGames, showAccessories, showDiscountedProducts, search, show } from '../controllers/productController.js';
 
-
 router.get('/', index);
 // Rotta per ottenere il cibo per cani
 router.get('/cani/food', showDogsFood);
@@ -34,4 +33,5 @@ router.get('/search/:term', search);
 // Funzione per la visualizzazione di un prodotto specifico tramite lo slug
 router.get('/:slug', show);
 
-export default router
+
+export default router;

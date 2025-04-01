@@ -1,12 +1,14 @@
 # PetShop Express 🐾
 
-PetShop Express è un'applicazione backend sviluppata con Node.js ed Express che fornisce un'API RESTful per la gestione di un negozio di articoli per animali. L'applicazione offre funzionalità avanzate di ricerca prodotti, gestione ordini e sistema di sconti.
+PetShop Express è un'applicazione backend sviluppata con Node.js ed Express che fornisce un'API RESTful per la gestione di un negozio di articoli per animali. L'applicazione offre funzionalità avanzate di ricerca prodotti, gestione ordini con notifiche email automatiche e sistema di sconti.
 
 ## 🚀 Tecnologie Utilizzate
 
 - Node.js
 - Express.js
 - MySQL2
+- Nodemailer
+- Mailtrap (per testing email)
 - CORS
 - Dotenv
 
@@ -19,6 +21,8 @@ PetShop Express è un'applicazione backend sviluppata con Node.js ed Express che
 ├── data/                 # Configurazione database e script SQL
 ├── middlewares/         # Middleware personalizzati
 ├── routes/              # Definizione delle rotte API
+├── services/            # Servizi (email, etc.)
+├── config/              # File di configurazione
 └── public/              # File statici (immagini)
 ```
 
@@ -34,11 +38,14 @@ PetShop Express è un'applicazione backend sviluppata con Node.js ed Express che
 3. Crea un file `.env` basandoti su `.env_example` con le tue configurazioni:
   
    ```env
-
    DB_HOST=localhost
    DB_USER=il_tuo_user
    DB_PASSWORD=la_tua_password
    DB_NAME=il_tuo_database
+   MAILTRAP_USER=user_mailtrap
+   MAILTRAP_PASS=pass_mailtrap
+   MAILTRAP_HOST=host_mailtrap
+   MAILTRAP_PORT=port_mailtrap
    ```
 
 4. Importa lo schema del database utilizzando il file `data/petsShop_db.sql`
@@ -48,7 +55,6 @@ PetShop Express è un'applicazione backend sviluppata con Node.js ed Express che
 Per avviare l'applicazione in modalità standard:
 
 ```bash
-
 npm start
 ```
 
@@ -70,13 +76,49 @@ Il database include le seguenti tabelle principali:
 - `order_details`: Dettagli degli ordini
 - `discount_codes`: Codici sconto
 
-## 🔍 API di Ricerca
+## 📫 API Disponibili
 
-### Ricerca Base
+### Gestione Ordini
+
+`POST /api/orders`
+
+Crea un nuovo ordine e invia email di conferma al cliente.
+
+Esempio di richiesta:
+
+```json
+
+{
+  "customerEmail": "cliente@example.com",
+  "products": [
+    {
+      "id": 1,
+      "name": "Crocchette Premium",
+      "price": 29.99,
+      "quantity": 2
+    }
+  ]
+}
+```
+
+### Test Email
+
+`POST /api/send-test-email`
+
+Invia un'email di test per verificare la configurazione del sistema di notifiche.
+
+Esempio di richiesta:
+```json
+{
+  "email": "test@example.com"
+}
+```
+
+### Ricerca Prodotti
 
 `GET /products/search`
 
-Permette di cercare prodotti utilizzando vari parametri di ricerca:
+Permette di cercare prodotti utilizzando vari parametri:
 
 - name
 - brand
@@ -86,8 +128,8 @@ Permette di cercare prodotti utilizzando vari parametri di ricerca:
 Esempio:
 
 ```path
-GET /products/search/crocchette
 
+GET /products/search/crocchette
 ```
 
 ## 🔒 Sicurezza
@@ -95,10 +137,12 @@ GET /products/search/crocchette
 - Validazione e sanitizzazione degli input
 - Protezione contro SQL injection attraverso query parametrizzate
 - Gestione sicura delle variabili d'ambiente
+- Sistema di logging per tracciamento errori
 
 ## 📝 Note per lo Sviluppo
 
 - Il progetto utilizza ES Modules (type: "module" nel package.json)
+- Sistema di notifiche email integrato con Nodemailer e Mailtrap
 - Le immagini dei prodotti sono servite staticamente dalla cartella `public`
 - Implementato middleware CORS per gestire le richieste cross-origin
 - Sistema di gestione percorsi immagini personalizzato

@@ -1,5 +1,6 @@
 import connection from '../data/db.js';
 
+
 function index(req, res) {
     const indexSql = 'SELECT * FROM products';
 
@@ -36,7 +37,16 @@ function showDogsFood(req, res) {
                 error: 'Errore lato server INDEX function',
             });
 
-        res.json(results);
+        // res.json(results);
+
+        const products = results.map((product) => {
+            return {
+                ...product,
+                image_url: req.imagePath + product.image_url, // Aggiungi il prefisso dell'URL all'immagine
+            };
+        });
+
+        res.json(products); // Invia la risposta JSON con i prodotti modificati
     });
 }
 
@@ -55,7 +65,15 @@ function showDogsGames(req, res) {
                 error: 'Errore lato server INDEX function',
             });
 
-        res.json(results);
+        // res.json(results);
+        const products = results.map((product) => {
+            return {
+                ...product,
+                image_url: req.imagePath + product.image_url, // Aggiungi il prefisso dell'URL all'immagine
+            };
+        });
+
+        res.json(products); // Invia la risposta JSON con i prodotti modificati
     });
 }
 
@@ -74,7 +92,15 @@ function showCatsFood(req, res) {
                 error: 'Errore lato server INDEX function',
             });
 
-        res.json(results);
+        // res.json(results);
+        const products = results.map((product) => {
+            return {
+                ...product,
+                image_url: req.imagePath + product.image_url, // Aggiungi il prefisso dell'URL all'immagine
+            };
+        });
+
+        res.json(products); // Invia la risposta JSON con i prodotti modificati
     });
 }
 
@@ -93,7 +119,15 @@ function showCatsGames(req, res) {
                 error: 'Errore lato server INDEX function',
             });
 
-        res.json(results);
+        // res.json(results);
+        const products = results.map((product) => {
+            return {
+                ...product,
+                image_url: req.imagePath + product.image_url, // Aggiungi il prefisso dell'URL all'immagine
+            };
+        });
+
+        res.json(products); // Invia la risposta JSON con i prodotti modificati
     });
 }
 
@@ -112,7 +146,15 @@ function showAccessories(req, res) {
                 error: 'Errore lato server INDEX function',
             });
 
-        res.json(results);
+        // res.json(results);
+        const products = results.map((product) => {
+            return {
+                ...product,
+                image_url: req.imagePath + product.image_url, // Aggiungi il prefisso dell'URL all'immagine
+            };
+        });
+
+        res.json(products); // Invia la risposta JSON con i prodotti modificati
     });
 }
 
@@ -130,7 +172,15 @@ function showDiscountedProducts(req, res) {
                 error: 'Errore lato server INDEX function',
             });
 
-        res.json(results);
+        // res.json(results);
+        const products = results.map((product) => {
+            return {
+                ...product,
+                image_url: req.imagePath + product.image_url, // Aggiungi il prefisso dell'URL all'immagine
+            };
+        });
+
+        res.json(products); // Invia la risposta JSON con i prodotti modificati
     });
 }
 
@@ -173,17 +223,26 @@ function search(req, res) {
                 data: []
             });
         }
-        // risposta
-        res.json({
-            message: `Trovati ${results.length} prodotti`,
-            data: results
+        const products = results.map((product) => {
+            return {
+                ...product,
+                image_url: req.imagePath + product.image_url, // Aggiungi il prefisso dell'URL all'immagine
+            };
         });
 
+        // res.json(products); // Invia la risposta JSON con i prodotti modificati
 
-    })
-
+        // risposta
+        res.json({
+            message: `Trovati ${products.length} prodotti`,
+            data: products
+        });
+    });
 
 }
+
+
+
 
 function show(req, res) {
     const { slug } = req.params; // Destruttura slug dai parametri della richiesta
@@ -201,7 +260,15 @@ function show(req, res) {
                 error: 'Prodotto non trovato'
             });
         }
-        res.json(results[0]); // Restituisci il primo risultato come JSON visto che sarà sempre univoco utilizzando lo slug
+        // res.json(results[0]); // Restituisci il primo risultato come JSON visto che sarà sempre univoco utilizzando lo slug
+        const products = results.map((product) => {
+            return {
+                ...product,
+                image_url: req.imagePath + product.image_url, // Aggiungi il prefisso dell'URL all'immagine
+            };
+        });
+
+        res.json(products); // Invia la risposta JSON con i prodotti modificati
     })
 }
 export { index, showDogsFood, showDogsGames, showCatsFood, showCatsGames, showAccessories, showDiscountedProducts, search, show };

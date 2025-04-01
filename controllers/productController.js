@@ -268,7 +268,7 @@ function show(req, res) {
             };
         });
 
-        res.json(products); // Invia la risposta JSON con i prodotti modificati
+        res.json(products[0]); // Invia la risposta JSON con i prodotti modificati
     })
 }
 export { index, showDogsFood, showDogsGames, showCatsFood, showCatsGames, showAccessories, showDiscountedProducts, search, show };

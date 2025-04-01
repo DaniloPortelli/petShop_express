@@ -85,7 +85,9 @@ Il database include le seguenti tabelle principali:
 Crea un nuovo ordine e invia email di conferma al cliente.
 
 Esempio di richiesta:
+
 ```json
+
 {
   "customerEmail": "cliente@example.com",
   "products": [
@@ -124,7 +126,9 @@ Permette di cercare prodotti utilizzando vari parametri:
 - animals
 
 Esempio:
+
 ```path
+
 GET /products/search/crocchette
 ```
 

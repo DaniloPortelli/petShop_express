@@ -285,10 +285,7 @@ function search(req, res) {
         // res.json(products); // Invia la risposta JSON con i prodotti modificati
 
         // risposta
-        res.json({
-            message: `Trovati ${products.length} prodotti`,
-            data: products
-        });
+        res.json(products);
     });
 
 }

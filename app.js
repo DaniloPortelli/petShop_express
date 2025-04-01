@@ -24,13 +24,17 @@ app.use(express.static("public"));
 
 app.use(express.json());
 
-app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use("/products", productRouter);
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(imagePathMiddleware);
 
+app.use("/products", productRouter);
+
+
+
 app.use('/orders', emailRoutes);
+
 
 //attivazione del server
 app.listen(port, () => {

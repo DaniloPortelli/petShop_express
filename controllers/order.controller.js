@@ -40,6 +40,7 @@ const calculateTotal = (products) => {
   );
   return parseFloat(total.toFixed(2));
 };
+
 //  Arricchisce i dati dell'ordine con informazioni aggiuntive
 const enrichOrderData = (order) => ({
   ...order,
@@ -60,20 +61,27 @@ const formatOrderResponse = (order) => ({
   }
 });
 
-const processOrder = async (req, res, next) => {
+const processOrder = async (req, res) => {
   try {
+    // richiamiamo la funzione validateOrder
     const validation = validateOrder(req.body);
+
     if (!validation.isValid) {
       return res.status(validation.error.status).json(validation.error);
     }
+    // richiamiamo la funzione enrichOrderData
     const order = enrichOrderData(req.body);
+    
+    // passiamo alla funzione di invio email i dati rispettivamente email e ordine
     await sendOrderConfirmationEmail(order.customerEmail, order);
+
     res.status(201).json(formatOrderResponse(order));
+
   } catch (error) {
-    next({
-      ...error,
-      type: 'ORDER_PROCESSING_ERROR',
-      timestamp: new Date().toISOString()
+    res.status(500).json({
+      success: false,
+      message: "Errore durante l'invio della conferma",
+      error: error.message
     });
   }
 };

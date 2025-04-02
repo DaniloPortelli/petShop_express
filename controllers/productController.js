@@ -239,24 +239,24 @@ function showCatsProducts(req, res) {
 
 // Funzione di ricerca che gestisce le richieste GET per cercare prodotti per nome
 function search(req, res) {
-    // Estrazione del parametro  di ricerca dai parametri dell'URL
-    // .term è il dato a cui ci stiamo riferendo dalla router 
-    const searchPar = req.params.term;
-    // .trim() rimuove gli spazi bianchi all'inizio e alla fine della stringa
-    if (!searchPar || searchPar.trim().length === 0) {
+    
+    
+    const searchPar = req.params.term; // Estrazione del parametro  di ricerca dai parametri dell'URL // .term è il dato a cui ci stiamo riferendo dalla router 
+    
+    if (!searchPar || searchPar.trim().length === 0) {// .trim() rimuove gli spazi bianchi all'inizio e alla fine della stringa
         return res.status(400).json({
             error: 'Il parametro di ricerca non può essere vuoto'
         });
     }
 
-    // Limitazione della lunghezza del parametro di ricerca
-    if (searchPar.length > 50) {
+   
+    if (searchPar.length > 50) { // Limitazione della lunghezza del parametro di ricerca
         return res.status(400).json({
             error: 'Il parametro di ricerca è troppo lungo (massimo 50 caratteri)'
         });
     }
 
-    const sql = 'SELECT * FROM products WHERE name LIKE ? LIMIT 100';
+    const sql = 'SELECT * FROM products WHERE name or description LIKE ? LIMIT 100';
     // %searchTerm% è un pattern di ricerca che permette di trovare tutte le parole che contengono il termine di ricerca
     const searchPattern = `%${searchPar}%`;
 

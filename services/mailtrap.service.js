@@ -24,17 +24,16 @@ const sendOrderConfirmationEmail = async (toEmail, orderDetails) => {
     /* Configurazione delle opzioni del messaggio email definisce tutti i parametri necessari per la composizionedel messaggio come mittente, destinatario, oggetto e contenuto*/
     const mailOptions = {
 
-      // Formatta il mittente nel formato "Nome" <email>
-      from: `"${mailtrapConfig.from.name}" <${mailtrapConfig.from.email}>`,
       
-      // Indirizzo email del destinatario
-      to: toEmail,
+      from: `"${mailtrapConfig.from.name}" <${mailtrapConfig.from.email}>`,// Formatta il mittente nel formato "Nome" <email>
       
-      // Oggetto dell'email con ID ordine dinamico
-      subject: `Conferma Ordine #${orderDetails.orderId}`,
+    
+      to: toEmail,  // Indirizzo email del destinatario
+  
+      subject: `Conferma Ordine #${orderDetails.orderId}`, // Oggetto dell'email con ID ordine dinamico
       
-      /* Template HTML dell'email struttura il contenuto dell'email in formato HTML */
-      html: `
+     /* Template HTML dell'email struttura il contenuto dell'email in formato HTML */
+      html: ` 
         <h1>Grazie per il tuo ordine!</h1>
         <p>Ecco i dettagli del tuo ordine:</p>
         <ul>
@@ -54,20 +53,19 @@ const sendOrderConfirmationEmail = async (toEmail, orderDetails) => {
       `
     };
 
-    /* Invio effettivo dell'email tramite il transport Nodemailer */
-    const info = await transporter.sendMail(mailOptions);
     
-    // Registra l'ID del messaggio per tracciamento
-    console.log('Email inviata con successo. ID Messaggio: %s', info.messageId);
+    const info = await transporter.sendMail(mailOptions); // Invio effettivo dell'email tramite il transport Nodemailer 
+    
+  
+    console.log('Email inviata con successo. ID Messaggio: %s', info.messageId);  // Registra l'ID del messaggio per tracciamento
     return info;
     
   } catch (error) {
-    // Registra l'errore nel log di sistema
-    console.error('Errore durante l\'invio dell\'email:', error);
     
-    /**
-     * Crea un nuovo errore con informazioni dettagliate */
-    throw new Error('EMAIL_SEND_FAILED', {
+    console.error('Errore durante l\'invio dell\'email:', error);  // Registra l'errore nel log
+    
+
+    throw new Error('EMAIL_SEND_FAILED', {     // Crea un nuovo errore con informazioni dettagliate 
       cause: error,
       details: {
         toEmail,

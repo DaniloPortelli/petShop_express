@@ -242,17 +242,17 @@ function showCatsProducts(req, res) {
 
 // Funzione di ricerca che gestisce le richieste GET per cercare prodotti per nome
 function search(req, res) {
-    
-    
+
+
     const searchPar = req.params.term; // Estrazione del parametro  di ricerca dai parametri dell'URL // .term è il dato a cui ci stiamo riferendo dalla router 
-    
+
     if (!searchPar || searchPar.trim().length === 0) {// .trim() rimuove gli spazi bianchi all'inizio e alla fine della stringa
         return res.status(400).json({
             error: 'Il parametro di ricerca non può essere vuoto'
         });
     }
 
-   
+
     if (searchPar.length > 50) { // Limitazione della lunghezza del parametro di ricerca
         return res.status(400).json({
             error: 'Il parametro di ricerca è troppo lungo (massimo 50 caratteri)'
@@ -321,5 +321,42 @@ function show(req, res) {
         res.json(products[0]); // Invia la risposta JSON con i prodotti modificati
     })
 }
-export { index, showDogsFood, showDogsGames, showCatsFood, showCatsGames, showAccessories, showDiscountedProducts, showDogsProducts, showCatsProducts, search, show };
+
+function storeOrder(req, res) {
+    const {
+        name,
+        email,
+        shippingAddress,
+        billingAddress,
+        cartItems,
+        discountCodeId,
+        shippingCost,
+    } = req.body;
+
+    // Inserisci l'ordine nella tabella 'orders'
+    connection.query(
+        'INSERT INTO orders (name, email, shipping_address, billing_address, discount_code_id, shipping_cost) VALUES (?, ?, ?, ?, ?, ?)',
+        [name, email, shippingAddress, billingAddress, discountCodeId, shippingCost],
+        (err, orderResult) => {
+            if (err) {
+                res.status(500).json({ error: 'Errore durante la creazione dell\'ordine' });
+                return;
+            }
+            const orderId = orderResult.insertId;
+
+            // Inserisci i dettagli dell'ordine nella tabella 'order_details'
+            cartItems.forEach((item) => {
+                connection.query(
+                    'INSERT INTO order_details (order_id, product_id, quantity, price, name) VALUES (?, ?, ?, ?, ?)',
+                    [orderId, item.id, item.quantity, item.price, item.name]
+                );
+            });
+
+            res.status(201).json({ message: 'Ordine creato con successo' });
+        }
+    );
+}
+
+
+export { index, showDogsFood, showDogsGames, showCatsFood, showCatsGames, showAccessories, showDiscountedProducts, showDogsProducts, showCatsProducts, search, show, storeOrder };
 

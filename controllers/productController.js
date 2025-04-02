@@ -259,7 +259,7 @@ function search(req, res) {
         });
     }
 
-    const sql = 'SELECT * FROM products WHERE name or description or category LIKE ? LIMIT 100';
+    const sql = `SELECT p.* FROM products p LEFT JOIN categories c ON p.category_id = c.id WHERE CONCAT(p.name, ' ', p.description, ' ', IFNULL(c.name, '')) LIKE ? LIMIT 100`
     // %searchTerm% è un pattern di ricerca che permette di trovare tutte le parole che contengono il termine di ricerca
     const searchPattern = `%${searchPar}%`;
 

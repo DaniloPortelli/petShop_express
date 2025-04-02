@@ -323,13 +323,20 @@ function show(req, res) {
 }
 
 function storeOrder(req, res) {
-
-    const { name, email, shippingAddress, billingAddress, cartItems } = req.body;
+    const {
+        name,
+        email,
+        shippingAddress,
+        billingAddress,
+        cartItems,
+        discountCodeId,
+        shippingCost,
+    } = req.body;
 
     // Inserisci l'ordine nella tabella 'orders'
     connection.query(
-        'INSERT INTO orders (name, email, shipping_address, billing_address) VALUES (?, ?, ?, ?)',
-        [name, email, shippingAddress, billingAddress],
+        'INSERT INTO orders (name, email, shipping_address, billing_address, discount_code_id, shipping_cost) VALUES (?, ?, ?, ?, ?, ?)',
+        [name, email, shippingAddress, billingAddress, discountCodeId, shippingCost],
         (err, orderResult) => {
             if (err) {
                 res.status(500).json({ error: 'Errore durante la creazione dell\'ordine' });
@@ -348,7 +355,7 @@ function storeOrder(req, res) {
             res.status(201).json({ message: 'Ordine creato con successo' });
         }
     );
-};
+}
 
 
 export { index, showDogsFood, showDogsGames, showCatsFood, showCatsGames, showAccessories, showDiscountedProducts, showDogsProducts, showCatsProducts, search, show, storeOrder };

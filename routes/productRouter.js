@@ -7,22 +7,22 @@ import  { index, showDogsFood, showDogsGames, showCatsFood, showCatsGames, showA
 
 router.get('/', index);
 // Rotta per ottenere il cibo per cani
-router.get('/cani/food', showDogsFood);
+router.get('/cani/cibo', showDogsFood);
 
 // Rotta per ottenere i giochi per cani
-router.get('/cani/games', showDogsGames);
+router.get('/cani/giochi', showDogsGames);
 
 // Rotta per ottenere il cibo per gatti
-router.get('/gatti/food', showCatsFood);
+router.get('/gatti/cibo', showCatsFood);
 
 // Rotta per ottenere i giochi per gatti
-router.get('/gatti/games', showCatsGames);
+router.get('/gatti/giochi', showCatsGames);
 
 // Rotta per ottenere gli accessori
-router.get('/accessories', showAccessories);
+router.get('/accessori', showAccessories);
 
 // Rotta per ottenere i prodotti sconto
-router.get('/discounted', showDiscountedProducts);
+router.get('/promozioni', showDiscountedProducts);
 
 // Rotta per ottenere i prodotti per cani
 router.get('/cani', showDogsProducts);

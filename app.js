@@ -29,7 +29,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(imagePathMiddleware);
 
-app.use("/products", productRouter);
+app.use("/prodotti", productRouter);
 
 
 

@@ -331,12 +331,17 @@ function storeOrder(req, res) {
         cartItems,
         discountCodeId,
         shippingCost,
+        lastName, 
+        country, 
+        state, 
+        city, 
+        zipCode, 
     } = req.body;
 
     // Inserisci l'ordine nella tabella 'orders'
     connection.query(
-        'INSERT INTO orders (name, email, shipping_address, billing_address, discount_code_id, shipping_cost) VALUES (?, ?, ?, ?, ?, ?)',
-        [name, email, shippingAddress, billingAddress, discountCodeId, shippingCost],
+        'INSERT INTO orders (name, email, shipping_address, billing_address, discount_code_id, shipping_cost, last_name, country, state, city, zip_code) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        [name, email, shippingAddress, billingAddress, discountCodeId, shippingCost, lastName, country, state, city, zipCode],
         (err, orderResult) => {
             if (err) {
                 res.status(500).json({ error: 'Errore durante la creazione dell\'ordine' });

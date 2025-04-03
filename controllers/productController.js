@@ -26,7 +26,7 @@ function index(req, res) {
 
 function showDogsFood(req, res) {
     const sql = `
-    SELECT p.id, p.*, c.id AS category_id, c.name 
+    SELECT p.id AS product_id, p.name AS product_name, p.*, c.id AS category_id, c.name AS category_name
     FROM products p
     JOIN categories c ON p.category_id = c.id
     WHERE c.name = 'Cibo' AND p.animals = 'cani';`;
@@ -54,7 +54,7 @@ function showDogsFood(req, res) {
 
 function showDogsGames(req, res) {
     const sql = `
-    SELECT p.id AS product_id, p.*, c.id AS category_id, c.name 
+    SELECT p.id AS product_id, p.name AS product_name, p.*, c.id AS category_id, c.name AS category_name
     FROM products p
     JOIN categories c ON p.category_id = c.id
     WHERE c.name = 'Giochi' AND p.animals = 'cani';
@@ -82,10 +82,11 @@ function showDogsGames(req, res) {
 
 function showCatsFood(req, res) {
     const sql = `
-    SELECT p.id AS product_id, p.*, c.id AS category_id, c.name 
+    SELECT p.id AS product_id, p.name AS product_name, p.*, c.id AS category_id, c.name AS category_name
     FROM products p
     JOIN categories c ON p.category_id = c.id
     WHERE c.name = 'Cibo' AND p.animals = 'gatti';
+
 `;
 
     connection.query(sql, (err, results) => {
@@ -110,7 +111,7 @@ function showCatsFood(req, res) {
 
 function showCatsGames(req, res) {
     const sql = `
-    SELECT p.id AS product_id, p.*, c.id AS category_id, c.name 
+    SELECT p.id AS product_id, p.name AS product_name, p.*, c.id AS category_id, c.name AS category_name
     FROM products p
     JOIN categories c ON p.category_id = c.id
     WHERE c.name = 'Giochi' AND p.animals = 'gatti';
@@ -138,10 +139,11 @@ function showCatsGames(req, res) {
 
 function showAccessories(req, res) {
     const sql = `
-    SELECT p.id AS product_id, p.*, c.id AS category_id, c.name
+    SELECT p.id AS product_id, p.name AS product_name, p.*, c.id AS category_id, c.name AS category_name
     FROM products p
     JOIN categories c ON p.category_id = c.id
-    WHERE c.name = 'Accessori';`;
+    WHERE c.name = 'Accessori';
+`;
 
     connection.query(sql, (err, results) => {
         if (err)

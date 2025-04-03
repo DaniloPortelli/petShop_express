@@ -1,5 +1,5 @@
 import connection from '../data/db.js';
-
+import { sendOrderConfirmationEmail } from '../services/mailtrap.service.js';
 
 function index(req, res) {
     const indexSql = 'SELECT * FROM products';
@@ -324,6 +324,8 @@ function show(req, res) {
     })
 }
 
+
+
 function storeOrder(req, res) {
     const {
         name,
@@ -344,7 +346,7 @@ function storeOrder(req, res) {
     connection.query(
         'INSERT INTO orders (name, email, shipping_address, billing_address, discount_code_id, shipping_cost, last_name, country, state, city, zip_code) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
         [name, email, shippingAddress, billingAddress, discountCodeId, shippingCost, lastName, country, state, city, zipCode],
-        (err, orderResult) => {
+        async (err, orderResult) => {
             if (err) {
                 res.status(500).json({ error: 'Errore durante la creazione dell\'ordine' });
                 return;
@@ -358,8 +360,34 @@ function storeOrder(req, res) {
                     [orderId, item.id, item.quantity, item.price, item.name]
                 );
             });
-
-            res.status(201).json({ message: 'Ordine creato con successo' });
+            // Prepara i dettagli dell'ordine per l'email
+            const orderDetails = {
+                orderId,
+                name,
+                lastName,
+                email,
+                shippingAddress,
+                billingAddress,
+                city,
+                state,
+                zipCode,
+                country,
+                cartItems,
+                shippingCost,
+                discountCodeId,
+                orderDate: new Date(),
+                totalAmount: cartItems.reduce((total, item) => total + (item.price * item.quantity), 0) + shippingCost
+            };
+            try {
+                // Invia l'email di conferma
+                await sendOrderConfirmationEmail(email, orderDetails);
+                res.status(201).json({ message: 'Ordine creato con successo e email di conferma inviata' });
+            } catch (emailError) {
+                console.error('Errore nell\'invio dell\'email:', emailError);
+                res.status(201).json({ 
+                    message: 'Ordine creato con successo, ma si è verificato un errore nell\'invio dell\'email di conferma'
+                });
+            }
         }
     );
 }

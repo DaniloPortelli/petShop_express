@@ -39,17 +39,45 @@ const sendOrderConfirmationEmail = async (toEmail, orderDetails) => {
         <ul>
           <li>ID Ordine: ${orderDetails.orderId}</li>
           <li>Data: ${new Date(orderDetails.orderDate).toLocaleDateString()}</li>
-          <li>Totale: €${orderDetails.totalAmount.toFixed(2)}</li>
         </ul>
+
+        <h3>Informazioni Cliente:</h3>
+        <ul>
+          <li>Nome: ${orderDetails.name} ${orderDetails.lastName}</li>
+          <li>Email: ${orderDetails.email}</li>
+        </ul>
+
+        <h3>Indirizzo di Spedizione:</h3>
+        <p>${orderDetails.shippingAddress}</p>
+        <ul>
+          <li>Città: ${orderDetails.city}</li>
+          <li>Stato/Regione: ${orderDetails.state}</li>
+          <li>CAP: ${orderDetails.zipCode}</li>
+          <li>Paese: ${orderDetails.country}</li>
+        </ul>
+
+        <h3>Indirizzo di Fatturazione:</h3>
+        <p>${orderDetails.billingAddress}</p>
+
         <h3>Prodotti ordinati:</h3>
         <ul>
-          ${orderDetails.products.map(product => `
+          ${orderDetails.cartItems.map(item => `
             <li>
-              ${product.name} - Quantità: ${product.quantity} - Prezzo: €${product.price.toFixed(2)}
+              ${item.name} - Quantità: ${item.quantity} - Prezzo: €${item.price.toFixed(2)} - Totale: €${(item.price * item.quantity).toFixed(2)}
             </li>
           `).join('')}
         </ul>
-        <p>Se hai domande, rispondi a questa email.</p>
+
+        <h3>Riepilogo Costi:</h3>
+        <ul>
+          <li>Subtotale: €${orderDetails.cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(2)}</li>
+          <li>Spese di spedizione: €${orderDetails.shippingCost.toFixed(2)}</li>
+          ${orderDetails.discountCodeId ? '<li>Codice Sconto Applicato: #' + orderDetails.discountCodeId + '</li>' : ''}
+          <li><strong>Totale: €${(orderDetails.cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0) + orderDetails.shippingCost).toFixed(2)}</strong></li>
+        </ul>
+
+        <p>Se hai domande, non esitare a contattarci rispondendo a questa email.</p>
+        <p>Grazie per aver scelto il nostro negozio!</p>
       `
     };
 

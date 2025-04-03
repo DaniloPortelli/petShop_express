@@ -12,14 +12,31 @@ import { sendOrderConfirmationEmail } from '../services/mailtrap.service.js';
 //  };
  
 const validateOrder = (order) => {
-  if (!order.customerEmail || !order.products || order.products.length === 0) {
-    return {isValid: false,
+  const requiredFields = [
+    'name',
+    'email',
+    'shippingAddress',
+    'billingAddress',
+    'cartItems',
+    'lastName',
+    'country',
+    'state',
+    'city',
+    'zipCode'
+  ];
+
+  const missingFields = requiredFields.filter(field => !order[field]);
+  
+  if (missingFields.length > 0 || !order.cartItems || order.cartItems.length === 0) {
+    return {
+      isValid: false,
       error: {
         status: 400,
         message: 'Dati ordine mancanti o non validi',
         details: {
-          requiredFields: ['customerEmail', 'products'],
-          note: 'products array must contain at least one item'
+          requiredFields,
+          missingFields: missingFields.length > 0 ? missingFields : undefined,
+          note: 'Tutti i campi sono obbligatori e il carrello deve contenere almeno un prodotto'
         }
       }
     };
@@ -33,11 +50,12 @@ const validateOrder = (order) => {
 //    { price: 5.50, quantity: 1 }
 //   ]); // returns 27.48
 
-const calculateTotal = (products) => {
-  const total = products.reduce(
-    (sum, product) => sum + (product.price * product.quantity),
+const calculateTotal = (cartItems, shippingCost = 0) => {
+  const subtotal = cartItems.reduce(
+    (sum, item) => sum + (item.price * item.quantity),
     0
   );
+  const total = subtotal + shippingCost;
   return parseFloat(total.toFixed(2));
 };
 
@@ -46,7 +64,7 @@ const enrichOrderData = (order) => ({
   ...order,
   orderId: Math.floor(Math.random() * 1000000),
   orderDate: new Date(),
-  totalAmount: order.totalAmount || calculateTotal(order.products)
+  totalAmount: order.totalAmount || calculateTotal(order.cartItems, order.shippingCost)
 });
 
 const formatOrderResponse = (order) => ({
@@ -55,9 +73,28 @@ const formatOrderResponse = (order) => ({
   order: {
     id: order.orderId,
     date: order.orderDate,
-    customerEmail: order.customerEmail,
-    total: order.totalAmount,
-    products: order.products
+    customer: {
+      name: order.name,
+      lastName: order.lastName,
+      email: order.email
+    },
+    shipping: {
+      address: order.shippingAddress,
+      city: order.city,
+      state: order.state,
+      zipCode: order.zipCode,
+      country: order.country
+    },
+    billing: {
+      address: order.billingAddress
+    },
+    items: order.cartItems,
+    costs: {
+      subtotal: calculateTotal(order.cartItems),
+      shipping: order.shippingCost,
+      total: order.totalAmount
+    },
+    discountCodeId: order.discountCodeId
   }
 });
 
@@ -73,7 +110,7 @@ const processOrder = async (req, res) => {
     const order = enrichOrderData(req.body);
     
     // passiamo alla funzione di invio email i dati rispettivamente email e ordine
-    await sendOrderConfirmationEmail(order.customerEmail, order);
+    await sendOrderConfirmationEmail(order.email, order);
 
     res.status(201).json(formatOrderResponse(order));
 

@@ -59,13 +59,7 @@ const calculateTotal = (cartItems, shippingCost = 0) => {
   return parseFloat(total.toFixed(2));
 };
 
-//  Arricchisce i dati dell'ordine con informazioni aggiuntive
-const enrichOrderData = (order) => ({
-  ...order,
-  orderId: Math.floor(Math.random() * 1000000),
-  orderDate: new Date(),
-  totalAmount: order.totalAmount || calculateTotal(order.cartItems, order.shippingCost)
-});
+
 
 const formatOrderResponse = (order) => ({
   success: true,
@@ -106,9 +100,6 @@ const processOrder = async (req, res) => {
     if (!validation.isValid) {
       return res.status(validation.error.status).json(validation.error);
     }
-    // richiamiamo la funzione enrichOrderData
-    const order = enrichOrderData(req.body);
-    
     // passiamo alla funzione di invio email i dati rispettivamente email e ordine
     await sendOrderConfirmationEmail(order.email, order);
 

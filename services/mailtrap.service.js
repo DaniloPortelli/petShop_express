@@ -33,51 +33,97 @@ const sendOrderConfirmationEmail = async (toEmail, orderDetails) => {
       subject: `Conferma Ordine #${orderDetails.orderId}`, // Oggetto dell'email con ID ordine dinamico
       
      /* Template HTML dell'email struttura il contenuto dell'email in formato HTML */
-      html: ` 
-        <h1>Grazie per il tuo ordine!</h1>
-        <p>Ecco i dettagli del tuo ordine:</p>
-        <ul>
-          <li>ID Ordine: ${orderDetails.orderId}</li>
-          <li>Data: ${new Date(orderDetails.orderDate).toLocaleDateString()}</li>
-        </ul>
+      html: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        </head>
+        <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; color: #333; line-height: 1.6;">
+          <div style="max-width: 600px; margin: 0 auto; padding: 20px; background-color: #ffffff; border: 2px solid #cabd9c; border-radius: 12px;">
+            <div style="text-align: center; padding: 30px 0; background-color: #cabd9c; border-radius: 8px 8px 0 0;">
+              <img src="http://localhost:${process.env.PORT}${process.env.COMPANY_LOGO_URL}" alt="PetShop Logo" style="max-width: 200px; height: auto; margin-bottom: 15px;">
+              <h1 style="color: #ffffff; margin: 20px 0 10px; font-size: 28px;">Grazie per il tuo ordine!</h1>
+            </div>
 
-        <h3>Informazioni Cliente:</h3>
-        <ul>
-          <li>Nome: ${orderDetails.name} ${orderDetails.lastName}</li>
-          <li>Email: ${orderDetails.email}</li>
-        </ul>
+            <div style="background-color: #ffffff; padding: 20px; border-radius: 8px; margin-top: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+              <h2 style="color: #cabd9c; border-bottom: 2px solid #cabd9c; padding-bottom: 10px; font-size: 24px;">Dettagli Ordine</h2>
+              <p style="margin: 10px 0; font-size: 16px;">
+                <strong>ID Ordine:</strong> #${orderDetails.orderId}<br>
+                <strong>Data:</strong> ${new Date(orderDetails.orderDate).toLocaleDateString()}
+              </p>
 
-        <h3>Indirizzo di Spedizione:</h3>
-        <p>${orderDetails.shippingAddress}</p>
-        <ul>
-          <li>Città: ${orderDetails.city}</li>
-          <li>Stato/Regione: ${orderDetails.state}</li>
-          <li>CAP: ${orderDetails.zipCode}</li>
-          <li>Paese: ${orderDetails.country}</li>
-        </ul>
+              <h3 style="color: #cabd9c; margin-top: 20px; font-size: 20px;">Informazioni Cliente</h3>
+              <p style="margin: 10px 0;">
+                <strong>Nome:</strong> ${orderDetails.name} ${orderDetails.lastName}<br>
+                <strong>Email:</strong> ${orderDetails.email}
+              </p>
 
-        <h3>Indirizzo di Fatturazione:</h3>
-        <p>${orderDetails.billingAddress}</p>
+              <h3 style="color: #cabd9c; margin-top: 20px; font-size: 20px;">Indirizzo di Spedizione</h3>
+              <p style="margin: 10px 0;">
+                ${orderDetails.shippingAddress}<br>
+                ${orderDetails.city}, ${orderDetails.state} ${orderDetails.zipCode}<br>
+                ${orderDetails.country}
+              </p>
 
-        <h3>Prodotti ordinati:</h3>
-        <ul>
-          ${orderDetails.cartItems.map(item => `
-            <li>
-              ${item.name} - Quantità: ${item.quantity} - Prezzo: €${item.price.toFixed(2)} - Totale: €${(item.price * item.quantity).toFixed(2)}
-            </li>
-          `).join('')}
-        </ul>
+              <h3 style="color: #cabd9c; margin-top: 20px; font-size: 20px;">Indirizzo di Fatturazione</h3>
+              <p style="margin: 10px 0;">${orderDetails.billingAddress}</p>
 
-        <h3>Riepilogo Costi:</h3>
-        <ul>
-          <li>Subtotale: €${orderDetails.cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(2)}</li>
-          <li>Spese di spedizione: €${orderDetails.shippingCost.toFixed(2)}</li>
-          ${orderDetails.discountCodeId ? '<li>Codice Sconto Applicato: #' + orderDetails.discountCodeId + '</li>' : ''}
-          <li><strong>Totale: €${(orderDetails.cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0) + orderDetails.shippingCost).toFixed(2)}</strong></li>
-        </ul>
+              <h3 style="color: #cabd9c; margin-top: 20px; font-size: 20px;">Prodotti Ordinati</h3>
+              <table style="width: 100%; border-collapse: collapse; margin: 10px 0;">
+                <thead>
+                  <tr style="background-color: #cabd9c; color: #ffffff;">
+                    <th style="padding: 12px; text-align: left; border-bottom: 2px solid #ffffff;">Prodotto</th>
+                    <th style="padding: 10px; text-align: center; border-bottom: 2px solid #dee2e6;">Quantità</th>
+                    <th style="padding: 10px; text-align: right; border-bottom: 2px solid #dee2e6;">Prezzo</th>
+                    <th style="padding: 10px; text-align: right; border-bottom: 2px solid #dee2e6;">Totale</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${orderDetails.cartItems.map(item => `
+                    <tr>
+                      <td style="padding: 10px; border-bottom: 1px solid #dee2e6;">${item.name}</td>
+                      <td style="padding: 10px; text-align: center; border-bottom: 1px solid #dee2e6;">${item.quantity}</td>
+                      <td style="padding: 10px; text-align: right; border-bottom: 1px solid #dee2e6;">€${item.price.toFixed(2)}</td>
+                      <td style="padding: 10px; text-align: right; border-bottom: 1px solid #dee2e6;">€${(item.price * item.quantity).toFixed(2)}</td>
+                    </tr>
+                  `).join('')}
+                </tbody>
+              </table>
 
-        <p>Se hai domande, non esitare a contattarci rispondendo a questa email.</p>
-        <p>Grazie per aver scelto il nostro negozio!</p>
+              <div style="background-color: #f8f9fa; padding: 15px; border-radius: 8px; margin-top: 20px;">
+                <h3 style="color: #2c3e50; margin-top: 0;">Riepilogo Costi</h3>
+                <table style="width: 100%;">
+                  <tr>
+                    <td style="padding: 5px 0;">Subtotale:</td>
+                    <td style="text-align: right;">€${orderDetails.cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(2)}</td>
+                  </tr>
+                  <tr>
+                    <td style="padding: 5px 0;">Spese di spedizione:</td>
+                    <td style="text-align: right;">€${orderDetails.shippingCost.toFixed(2)}</td>
+                  </tr>
+                  ${orderDetails.discountCodeId ? `
+                    <tr>
+                      <td style="padding: 5px 0;">Codice Sconto Applicato:</td>
+                      <td style="text-align: right;">#${orderDetails.discountCodeId}</td>
+                    </tr>
+                  ` : ''}
+                  <tr style="font-weight: bold;">
+                    <td style="padding: 5px 0; border-top: 2px solid #dee2e6;">Totale:</td>
+                    <td style="text-align: right; border-top: 2px solid #dee2e6;">€${(orderDetails.cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0) + orderDetails.shippingCost).toFixed(2)}</td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 30px; padding: 20px; background-color: #cabd9c; border-radius: 0 0 8px 8px; color: #ffffff;">
+              <p style="margin: 0;">Se hai domande, non esitare a contattarci rispondendo a questa email.</p>
+              <p style="margin: 10px 0 0; font-weight: bold; font-size: 18px;">Grazie per aver scelto il nostro negozio!</p>
+            </div>
+          </div>
+        </body>
+        </html>
       `
     };
 

@@ -335,11 +335,11 @@ function storeOrder(req, res) {
         cartItems,
         discountCodeId,
         shippingCost,
-        lastName, 
-        country, 
-        state, 
-        city, 
-        zipCode, 
+        lastName,
+        country,
+        state,
+        city,
+        zipCode,
     } = req.body;
 
     // Inserisci l'ordine nella tabella 'orders'
@@ -384,14 +384,52 @@ function storeOrder(req, res) {
                 res.status(201).json({ message: 'Ordine creato con successo e email di conferma inviata' });
             } catch (emailError) {
                 console.error('Errore nell\'invio dell\'email:', emailError);
-                res.status(201).json({ 
+                res.status(201).json({
                     message: 'Ordine creato con successo, ma si è verificato un errore nell\'invio dell\'email di conferma'
                 });
             }
         }
     );
 }
+const validateDiscountCode = (req, res)=> {
+    
+    const { discountCode } = req.body
+    //NOTE - errore generico Bad Request appare in console quando non viene passato il codice sconto
+    
+    if (!discountCode) {
+        return res.status(400).json({ error: "Inserisci il codice sconto" });
+    }
+    
+    const sql = 'SELECT * FROM discount_codes WHERE code = ? AND CURDATE() BETWEEN start_date AND end_date'
+
+    connection.query(sql, [discountCode], (err, results) => {
+        
+        if (err) {
+            console.error("Database error:", err);
+            return res.status(500).json({ error: "Errore interno del server" });
+        }
+        //NOTE - status 200 e valid true se il codice sconto è valido non restituisce nessuna informazione in console
+       
+        if (results.length > 0) {
+            res.status(200).json({
+                valid: true,
+                message: "Codice sconto valido!",
+                discount: results[0] // Invia anche i dettagli dello sconto
+            });
+        } else {
+            //NOTE - status 404 e valid false se il codice sconto non è valido o scaduto
+            // In questo caso, non restituiamo alcun messaggio specifico per evitare di rivelare informazioni sui codici sconto
+           
+            res.status(404).json({
+                valid: false,
+                message: "Codice sconto non valido o scaduto"
+            });
+        }
+    }
+    )
+}
 
 
-export { index, showDogsFood, showDogsGames, showCatsFood, showCatsGames, showAccessories, showDiscountedProducts, showDogsProducts, showCatsProducts, search, show, storeOrder };
+
+export { index, showDogsFood, showDogsGames, showCatsFood, showCatsGames, showAccessories, showDiscountedProducts, showDogsProducts, showCatsProducts, search, show, storeOrder, validateDiscountCode };
 

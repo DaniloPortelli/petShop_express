@@ -3,7 +3,7 @@ import express from 'express'
 const router = express.Router()
 
 
-import  { index, showDogsFood, showDogsGames, showCatsFood, showCatsGames, showAccessories, showDiscountedProducts, showDogsProducts, showCatsProducts, search, show, storeOrder } from '../controllers/productController.js';
+import  { index, showDogsFood, showDogsGames, showCatsFood, showCatsGames, showAccessories, showDiscountedProducts, showDogsProducts, showCatsProducts, search, show, storeOrder,validateDiscountCode } from '../controllers/productController.js';
 
 router.get('/', index);
 // Rotta per ottenere il cibo per cani
@@ -42,5 +42,6 @@ router.get('/:slug', show);
 // Funzione per la memorizzazione dell'ordine
 router.post('/orders', storeOrder);
 
+router.post('/validateDiscountCode',validateDiscountCode);
 
 export default router;

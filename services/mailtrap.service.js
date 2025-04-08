@@ -75,7 +75,7 @@ const sendOrderConfirmationEmail = async (toEmail, orderDetails) => {
                 ${orderDetails.country}
               </p>
 
-              <h3 style="color: #cabd9c; margin-top: 20px; font-size: 20px;">Indirizzo di Fatturazione</h3>
+              <h3 style="color: #cabd9c; margin-top: 20px; font-size: 20px;">Dati di Fatturazione</h3>
               <p style="margin: 10px 0;">${orderDetails.billingAddress}</p>
 
               <h3 style="color: #cabd9c; margin-top: 20px; font-size: 20px;">Prodotti Ordinati</h3>
@@ -99,12 +99,12 @@ const sendOrderConfirmationEmail = async (toEmail, orderDetails) => {
                       <td style="padding: 10px; text-align: center; border-bottom: 1px solid #dee2e6;">${
                         item.quantity
                       }</td>
-                      <td style="padding: 10px; text-align: right; border-bottom: 1px solid #dee2e6;">€${parseInt(
+                      <td style="padding: 10px; text-align: right; border-bottom: 1px solid #dee2e6;">${parseFloat(
                         item.price
-                      ).toFixed(2)}</td>
-                      <td style="padding: 10px; text-align: right; border-bottom: 1px solid #dee2e6;">€${(
+                      ).toFixed(2)} €</td>
+                      <td style="padding: 10px; text-align: right; border-bottom: 1px solid #dee2e6;">${(
                         item.price * item.quantity
-                      ).toFixed(2)}</td>
+                      ).toFixed(2)} €</td>
                     </tr>
                   `
                     )
@@ -117,37 +117,31 @@ const sendOrderConfirmationEmail = async (toEmail, orderDetails) => {
                 <table style="width: 100%;">
                   <tr>
                     <td style="padding: 5px 0;">Subtotale:</td>
-                    <td style="text-align: right;">€${orderDetails.cartItems
-                      .reduce(
-                        (sum, item) => sum + item.price * item.quantity,
-                        0
-                      )
-                      .toFixed(2)}</td>
+                    <td style="text-align: right;">${orderDetails.subtotal.toFixed(
+                      2
+                    )} €</td>
                   </tr>
                   <tr>
                     <td style="padding: 5px 0;">Spese di spedizione:</td>
-                    <td style="text-align: right;">€${orderDetails.shippingCost.toFixed(
+                    <td style="text-align: right;">${orderDetails.shippingCost.toFixed(
                       2
-                    )}</td>
+                    )}€</td>
                   </tr>
                   ${
-                    orderDetails.discountCodeId
+                    orderDetails.discount
                       ? `
                     <tr>
-                      <td style="padding: 5px 0;">Codice Sconto Applicato:</td>
-                      <td style="text-align: right;">#${orderDetails.discountCodeId}</td>
+                      <td style="padding: 5px 0;">Codice Sconto (${orderDetails.discount.code}):</td>
+                      <td style="text-align: right;">-${orderDetails.discount.amount} €</td>
                     </tr>
                   `
                       : ""
                   }
                   <tr style="font-weight: bold;">
                     <td style="padding: 5px 0; border-top: 2px solid #dee2e6;">Totale:</td>
-                    <td style="text-align: right; border-top: 2px solid #dee2e6;">€${(
-                      orderDetails.cartItems.reduce(
-                        (sum, item) => sum + item.price * item.quantity,
-                        0
-                      ) + orderDetails.shippingCost
-                    ).toFixed(2)}</td>
+                    <td style="text-align: right; border-top: 2px solid #dee2e6;">${orderDetails.totalAmount.toFixed(
+                      2
+                    )} €</td>
                   </tr>
                 </table>
               </div>
@@ -165,7 +159,12 @@ const sendOrderConfirmationEmail = async (toEmail, orderDetails) => {
 
     const info = await transporter.sendMail(mailOptions); // Invio effettivo dell'email tramite il transport Nodemailer
 
-    console.log("Email inviata con successo. ID Messaggio: %s", info.messageId, process.env.PORT ,process.env.COMPANY_LOGO_URL ); // Registra l'ID del messaggio per tracciamento
+    console.log(
+      "Email inviata con successo. ID Messaggio: %s",
+      info.messageId,
+      process.env.PORT,
+      process.env.COMPANY_LOGO_URL
+    ); // Registra l'ID del messaggio per tracciamento
     return info;
   } catch (error) {
     console.error("Errore durante l'invio dell'email:", error); // Registra l'errore nel log

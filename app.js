@@ -14,7 +14,7 @@ const port = 3000;
 
 import productRouter from "./routes/productRouter.js";
 
-import emailRoutes from "./routes/email.routes.js";
+
 
 import bodyParser from "body-parser";
 
@@ -30,11 +30,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(imagePathMiddleware);
 
 app.use("/prodotti", productRouter);
-
-
-
-app.use('/orders', emailRoutes);
-
 
 //attivazione del server
 app.listen(port, () => {
